@@ -55,12 +55,20 @@ public class CommonAlgorithms {
         return t2;
     }
 
-    public static List<Long> primesLessThan(long upperBound) {
-        return LongStream.range(2, upperBound).filter(CommonAlgorithms::isPrime).boxed().toList();
+    public static List<Long> primesLessThan(long endExclusive) {
+        return primesBetween(2, endExclusive);
     }
 
-    public static long countOfPrimesLessThan(long upperBound) {
-        return LongStream.range(2, upperBound).filter(CommonAlgorithms::isPrime).count();
+    public static List<Long> primesBetween(long startInclusive, long endExclusive) {
+        return LongStream.range(startInclusive, endExclusive).filter(CommonAlgorithms::isPrime).boxed().toList();
+    }
+
+    public static long countOfPrimesLessThan(long endExclusive) {
+        return LongStream.range(2, endExclusive).filter(CommonAlgorithms::isPrime).count();
+    }
+
+    public static long countOfPrimesBetween(long startInclusive, long endExclusive) {
+        return LongStream.range(startInclusive, endExclusive).filter(CommonAlgorithms::isPrime).count();
     }
 
     public static boolean isPrime(long num) {
