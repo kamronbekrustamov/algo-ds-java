@@ -1,6 +1,7 @@
 package org.kamronbek.algo.number;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 public class CommonAlgorithms {
@@ -60,7 +61,7 @@ public class CommonAlgorithms {
     }
 
     public static List<Long> primesBetween(long startInclusive, long endExclusive) {
-        return LongStream.range(startInclusive, endExclusive).filter(CommonAlgorithms::isPrime).boxed().toList();
+        return LongStream.range(startInclusive, endExclusive).filter(CommonAlgorithms::isPrime).boxed().collect(Collectors.toList());
     }
 
     public static long countOfPrimesLessThan(long endExclusive) {
@@ -71,6 +72,17 @@ public class CommonAlgorithms {
         return LongStream.range(startInclusive, endExclusive).filter(CommonAlgorithms::isPrime).count();
     }
 
+    public static List<Long> relativeLyPrimesLessThan(long num, long endExclusive) {
+        return relativelyPrimesBetween(num, 1, endExclusive);
+    }
+
+    public static List<Long> relativelyPrimesBetween(long num, long startInclusive, long endExclusive) {
+        if (num < 1) {
+            throw new IllegalArgumentException("Number must be greater than 0");
+        }
+        return LongStream.range(startInclusive, endExclusive).filter(it -> gcd(it, num) == 1).boxed().collect(Collectors.toList());
+    }
+
     public static boolean isPrime(long num) {
         long squareRoot = (long) Math.sqrt(num);
         for (long i = 2; i <= squareRoot; i++) {
@@ -79,5 +91,21 @@ public class CommonAlgorithms {
             }
         }
         return true;
+    }
+
+    public static long fastModularExponentiation(long base, long exponent, long mod) {
+        if (base < 0 || exponent < 0 || mod < 1) {
+            throw new IllegalArgumentException("Base and exponent must not be negative integers, and mod must be higher than 0");
+        }
+        String binaryString = Long.toBinaryString(exponent);
+        long result = 1;
+        long power = base;
+        for (int i = binaryString.length() - 1; i >= 0; i--) {
+            if (binaryString.charAt(i) == '1') {
+                result = (result * power % mod);
+            }
+            power = power * power % mod;
+        }
+        return result;
     }
 }
