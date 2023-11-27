@@ -76,8 +76,8 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public static Fraction getRandom() {
-        long numerator = random.nextLong(1, 100);
-        long denominator = random.nextLong(1, 100);
+        long numerator = random.nextLong(1, 20);
+        long denominator = random.nextLong(1, 20);
         long sign = random.nextInt(0, 2) == 0 ? 1 : -1;
         return Fraction.of(sign * numerator, denominator);
     }
@@ -124,6 +124,8 @@ public class Fraction implements Comparable<Fraction> {
 
     @Override
     public String toString() {
+        if (denominator == 1)
+            return String.valueOf(numerator);
         return numerator + "/" + denominator;
     }
 }
