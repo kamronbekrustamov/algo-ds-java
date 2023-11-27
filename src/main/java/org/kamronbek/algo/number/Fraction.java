@@ -75,6 +75,10 @@ public class Fraction implements Comparable<Fraction> {
         return numerator == 0;
     }
 
+    public boolean isOne() {
+        return numerator == 1 && denominator == 1;
+    }
+
     public static Fraction getRandom() {
         long numerator = random.nextLong(1, 20);
         long denominator = random.nextLong(1, 20);
