@@ -24,6 +24,11 @@ public class CommonAlgorithms {
         return first;
     }
 
+    public static long lcm(long first, long second) {
+        long gcd = gcd(first, second);
+        return first / gcd * second;
+    }
+
     // Find the modular multiplicative inverse using Extended Euclidean algorithm
     public static long modularMultiplicativeInverse(long num, long mod) {
         if (gcd(num, mod) != 1) {
