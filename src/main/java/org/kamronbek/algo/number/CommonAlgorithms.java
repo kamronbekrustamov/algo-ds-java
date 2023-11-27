@@ -10,12 +10,11 @@ public class CommonAlgorithms {
 
     // Find the GCD using Euclidean algorithm
     public static long gcd(long first, long second) {
-        if (first <= 0) {
-            throw new IllegalArgumentException("Numbers must be greater than 0");
+        if (first == 0 || second == 0) {
+            throw new ArithmeticException("Numbers cannot be zero");
         }
-        if (second <= 0) {
-            throw new IllegalArgumentException("Numbers must be greater than 0");
-        }
+        first = Math.abs(first);
+        second = Math.abs(second);
         while (second != 0) {
             long temp = second;
             second = first % second;
@@ -32,7 +31,7 @@ public class CommonAlgorithms {
     // Find the modular multiplicative inverse using Extended Euclidean algorithm
     public static long modularMultiplicativeInverse(long num, long mod) {
         if (gcd(num, mod) != 1) {
-            throw new IllegalArgumentException("Numbers must be relatively prime");
+            throw new ArithmeticException("Numbers must be relatively prime");
         }
 
         // Making sure that a >= b
