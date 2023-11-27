@@ -82,6 +82,12 @@ public class Fraction implements Comparable<Fraction> {
         return Fraction.of(sign * numerator, denominator);
     }
 
+    public static Fraction randomUnitFraction() {
+        long numerator = random.nextLong(1, 20);
+        long sign = random.nextInt(0, 2) == 0 ? 1 : -1;
+        return Fraction.of(sign * numerator, 1);
+    }
+
     public static long gcd(long first, long second) {
         if (first == 0 || second == 0) {
             throw new ArithmeticException("Numbers cannot be zero");
