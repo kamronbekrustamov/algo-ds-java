@@ -24,6 +24,8 @@ public class CommonAlgorithms {
     }
 
     public static long lcm(long first, long second) {
+        first = Math.abs(first);
+        second = Math.abs(second);
         long gcd = gcd(first, second);
         return first / gcd * second;
     }
