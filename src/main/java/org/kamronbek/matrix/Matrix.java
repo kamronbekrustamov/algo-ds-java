@@ -58,6 +58,36 @@ public class Matrix {
         return of(additionMatrixArray);
     }
 
+    public Matrix subtract(Matrix matrix) {
+        if (rows != matrix.rows || columns != matrix.columns) {
+            throw new IllegalArgumentException("Only matrices with the same dimensions can be added");
+        }
+        Fraction[][] additionMatrixArray = new Fraction[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                additionMatrixArray[i][j] = this.matrixArray[i][j].subtract(matrix.matrixArray[i][j]);
+            }
+        }
+        return of(additionMatrixArray);
+    }
+
+    public Matrix multiply(Matrix matrix) {
+        if (columns != matrix.rows) {
+            throw new IllegalArgumentException("Matrices must have compatible dimensions(this.columns = matrix.rows)");
+        }
+        Fraction[][] multiplicationMatrixArray = new Fraction[rows][matrix.columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < matrix.columns; j++) {
+                Fraction fraction = Fraction.ZERO;
+                for (int k = 0; k < columns; k++) {
+                    fraction = fraction.add(this.matrixArray[i][k].multiply(matrix.matrixArray[k][j]));
+                }
+                multiplicationMatrixArray[i][j] = fraction;
+            }
+        }
+        return of(multiplicationMatrixArray);
+    }
+
     public boolean isIdentityMatrix() {
         if (rows != columns) return false;
         for (int i = 0; i < rows; i++) {
