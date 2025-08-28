@@ -8,26 +8,48 @@ public class CommonAlgorithms {
 
     private CommonAlgorithms() {}
 
-    // Find the GCD using Euclidean algorithm
-    public static long gcd(long first, long second) {
-        if (first == 0 || second == 0) {
-            throw new ArithmeticException("Numbers cannot be zero");
+    /**
+     * Calculates the greatest common divisor (GCD) of two numbers using the Euclidean algorithm.
+     * The GCD of two integers is the largest positive integer that divides both numbers without a remainder.
+     * This implementation handles non-positive inputs by taking their absolute values.
+     * By definition, gcd(n, 0) = |n|.
+     *
+     * @param a the first number.
+     * @param b the second number.
+     * @return the greatest common divisor of {@code a} and {@code b}.
+     */
+    public static long gcd(long a, long b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
+        // The Euclidean algorithm correctly handles a zero input, e.g., gcd(n, 0) == n.
+        // The only edge case is gcd(0, 0), which will correctly result in 0.
+        while (b != 0) {
+            long temp = b;
+            b = a % b;
+            a = temp;
         }
-        first = Math.abs(first);
-        second = Math.abs(second);
-        while (second != 0) {
-            long temp = second;
-            second = first % second;
-            first = temp;
-        }
-        return first;
+        return a;
     }
 
-    public static long lcm(long first, long second) {
-        first = Math.abs(first);
-        second = Math.abs(second);
-        long gcd = gcd(first, second);
-        return first / gcd * second;
+    /**
+     * Calculates the least common multiple (LCM) of two numbers.
+     * The LCM of two integers is the smallest positive integer that is divisible by both numbers.
+     * The calculation uses the formula: lcm(a, b) = (|a * b|) / gcd(a, b).
+     * This implementation returns 0 if either input is 0.
+     *
+     * @param a the first number.
+     * @param b the second number.
+     * @return the least common multiple of {@code a} and {@code b}.
+     */
+    public static long lcm(long a, long b) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
+        a = Math.abs(a);
+        b = Math.abs(b);
+        long gcd = gcd(a, b);
+        // Calculate as (first / gcd) * second to prevent potential overflow of (first * second)
+        return (a / gcd) * b;
     }
 
     // Find the modular multiplicative inverse using Extended Euclidean algorithm
@@ -62,26 +84,69 @@ public class CommonAlgorithms {
         return t2;
     }
 
+    /**
+     * Finds all prime numbers less than a given number.
+     *
+     * @param endExclusive The upper bound (exclusive).
+     * @return A list of all prime numbers from 2 up to (but not including) {@code endExclusive}.
+     */
     public static List<Long> primesLessThan(long endExclusive) {
         return primesBetween(2, endExclusive);
     }
 
+    /**
+     * Finds all prime numbers within a given range.
+     *
+     * @param startInclusive The lower bound (inclusive).
+     * @param endExclusive   The upper bound (exclusive).
+     * @return A list of prime numbers in the specified range.
+     */
     public static List<Long> primesBetween(long startInclusive, long endExclusive) {
         return LongStream.range(startInclusive, endExclusive).filter(CommonAlgorithms::isPrime).boxed().collect(Collectors.toList());
     }
 
+    /**
+     * Counts the number of primes less than a given number.
+     *
+     * @param endExclusive The upper bound (exclusive).
+     * @return The count of prime numbers from 2 up to (but not including) {@code endExclusive}.
+     */
     public static long countOfPrimesLessThan(long endExclusive) {
         return LongStream.range(2, endExclusive).filter(CommonAlgorithms::isPrime).count();
     }
 
+    /**
+     * Counts the number of primes within a given range.
+     *
+     * @param startInclusive The lower bound (inclusive).
+     * @param endExclusive   The upper bound (exclusive).
+     * @return The count of prime numbers in the specified range.
+     */
     public static long countOfPrimesBetween(long startInclusive, long endExclusive) {
         return LongStream.range(startInclusive, endExclusive).filter(CommonAlgorithms::isPrime).count();
     }
 
-    public static List<Long> relativeLyPrimesLessThan(long num, long endExclusive) {
+    /**
+     * Finds all numbers less than a given value that are relatively prime to {@code num}.
+     * Two numbers are relatively prime if their greatest common divisor (GCD) is 1.
+     *
+     * @param num          The number to check for relative primality against.
+     * @param endExclusive The upper bound (exclusive) for the numbers to check.
+     * @return A list of numbers from 1 to {@code endExclusive} that are relatively prime to {@code num}.
+     */
+    public static List<Long> relativelyPrimesLessThan(long num, long endExclusive) {
         return relativelyPrimesBetween(num, 1, endExclusive);
     }
 
+    /**
+     * Finds all numbers in a given range that are relatively prime to {@code num}.
+     * Two numbers are relatively prime if their greatest common divisor (GCD) is 1.
+     *
+     * @param num            The number to check for relative primality against.
+     * @param startInclusive The lower bound (inclusive) for the numbers to check.
+     * @param endExclusive   The upper bound (exclusive) for the numbers to check.
+     * @return A list of numbers in the specified range that are relatively prime to {@code num}.
+     */
     public static List<Long> relativelyPrimesBetween(long num, long startInclusive, long endExclusive) {
         if (num < 1) {
             throw new IllegalArgumentException("Number must be greater than 0");
