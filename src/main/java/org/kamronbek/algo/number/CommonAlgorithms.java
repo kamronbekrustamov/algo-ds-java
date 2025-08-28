@@ -89,9 +89,28 @@ public class CommonAlgorithms {
         return LongStream.range(startInclusive, endExclusive).filter(it -> gcd(it, num) == 1).boxed().collect(Collectors.toList());
     }
 
+    /**
+     * Checks if a number is prime using an optimized trial division method.
+     * <p>
+     * A number is prime if it is greater than 1 and has no positive divisors other than 1 and itself.
+     * This implementation first checks for small special cases (numbers less than 2, 2 itself, and other even numbers)
+     * and then checks for divisibility by odd numbers up to the square root of the number.
+     *
+     * @param num the number to check.
+     * @return {@code true} if the number is prime, {@code false} otherwise.
+     */
     public static boolean isPrime(long num) {
+        if (num < 2) {
+            return false;
+        }
+        if (num == 2) {
+            return true;
+        }
+        if (num % 2 == 0) {
+            return false;
+        }
         long squareRoot = (long) Math.sqrt(num);
-        for (long i = 2; i <= squareRoot; i++) {
+        for (long i = 3; i <= squareRoot; i += 2) {
             if (num % i == 0) {
                 return false;
             }
@@ -99,18 +118,34 @@ public class CommonAlgorithms {
         return true;
     }
 
+    /**
+     * Calculates (base ^ exponent) % mod using the right-to-left binary method
+     * (also known as exponentiation by squaring). This is highly efficient for large exponents.
+     *
+     * @param base     the base of the exponentiation (can be negative)
+     * @param exponent the exponent (must be non-negative)
+     * @param mod      the modulus (must be greater than 1)
+     * @return the value of (base ^ exponent) % mod
+     */
     public static long fastModularExponentiation(long base, long exponent, long mod) {
-        if (base < 0 || exponent < 0 || mod < 1) {
-            throw new IllegalArgumentException("Base and exponent must not be negative integers, and mod must be higher than 0");
+        if (exponent < 0) {
+            throw new IllegalArgumentException("Exponent cannot be negative.");
         }
-        String binaryString = Long.toBinaryString(exponent);
-        long result = 1;
-        long power = base;
-        for (int i = binaryString.length() - 1; i >= 0; i--) {
-            if (binaryString.charAt(i) == '1') {
-                result = (result * power % mod);
+        if (mod <= 1) {
+            if (mod == 1) {
+                return 0;
             }
-            power = power * power % mod;
+            throw new IllegalArgumentException("Modulus must be greater than 1.");
+        }
+
+        long result = 1;
+        // Reduce base with mod at the start and handle negative base.
+        // The result of % in Java can be negative, so we adjust it to be in [0, mod-1].
+        long b = (base % mod + mod) % mod;
+        while (exponent > 0) {
+            if ((exponent & 1) == 1) result = (result * b) % mod;
+            b = (b * b) % mod;
+            exponent >>= 1; // Move to the next bit (equivalent to exponent / 2)
         }
         return result;
     }
