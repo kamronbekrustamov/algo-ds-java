@@ -52,36 +52,41 @@ public class CommonAlgorithms {
         return (a / gcd) * b;
     }
 
-    // Find the modular multiplicative inverse using Extended Euclidean algorithm
+    /**
+     * Calculates the modular multiplicative inverse of a number 'num' modulo 'mod'.
+     * It finds a number 'x' such that (num * x) % mod = 1.
+     * This implementation uses the Extended Euclidean Algorithm.
+     *
+     * @param num the number to find the inverse for.
+     * @param mod the modulus.
+     * @return the modular multiplicative inverse of {@code num} modulo {@code mod}.
+     * @throws ArithmeticException if the modulus is not greater than 1, or if an inverse does not exist.
+     */
     public static long modularMultiplicativeInverse(long num, long mod) {
-        if (gcd(num, mod) != 1) {
-            throw new ArithmeticException("Numbers must be relatively prime");
+        if (mod <= 1) {
+            throw new ArithmeticException("Modulus must be greater than 1.");
         }
 
-        // Making sure that a >= b
-        long a = mod;
-        long b = num % mod; // if the num is higher than mod, then making it less than mod
-        long quotient = a / b;
-        long remainder = a % b;
-        long t1 = 0;
-        long t2 = 1;
-        long t = t1 - t2 * quotient;
+        long m0 = mod;
+        // Ensure num is in the range [0, mod-1]
+        long n = (num % mod + mod) % mod;
 
-        while (remainder != 0) {
-            a = b;
-            b = remainder;
-            quotient = a / b;
-            remainder = a % b;
-            t1 = t2;
-            t2 = t;
-            t = t1 - t2 * quotient;
+        long t = 0, newT = 1;
+        long r = m0, newR = n;
+
+        while (newR != 0) {
+            long quotient = r / newR;
+            long temp;
+
+            temp = newT; newT = t - quotient * newT; t = temp;
+            temp = newR; newR = r - quotient * newR; r = temp;
         }
 
-        // If the modular multiplicative inverse is negative, making it positive
-        while (t2 < 0) {
-            t2 += mod;
+        if (r > 1) {
+            throw new ArithmeticException("Modular inverse does not exist because numbers are not relatively prime.");
         }
-        return t2;
+
+        return (t < 0) ? t + m0 : t;
     }
 
     /**

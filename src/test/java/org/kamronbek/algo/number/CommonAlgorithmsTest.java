@@ -98,4 +98,53 @@ class CommonAlgorithmsTest {
         // (-3)^13 % 7 = (-3 % 7)^13 % 7 = 4^13 % 7 = 4
         assertEquals(4, CommonAlgorithms.fastModularExponentiation(-3, 13, 7));
     }
+
+        // === modularMultiplicativeInverse Tests ===
+    @Test
+    void testModularInverse_SimpleCase() {
+        // The inverse of 3 mod 11 is 4, because (3 * 4) % 11 = 12 % 11 = 1.
+        assertEquals(4, CommonAlgorithms.modularMultiplicativeInverse(3, 11));
+    }
+
+    @Test
+    void testModularInverse_AnotherCase() {
+        // The inverse of 7 mod 26 is 15, because (7 * 15) % 26 = 105 % 26 = 1.
+        assertEquals(15, CommonAlgorithms.modularMultiplicativeInverse(7, 26));
+    }
+
+    @Test
+    void testModularInverse_NumGreaterThanMod() {
+        // 14 is congruent to 3 (mod 11), so the inverse is the same as for 3.
+        assertEquals(4, CommonAlgorithms.modularMultiplicativeInverse(14, 11));
+    }
+
+    @Test
+    void testModularInverse_NegativeNum() {
+        // -3 is congruent to 8 (mod 11). The inverse of 8 is 7, because (8 * 7) % 11 = 56 % 11 = 1.
+        assertEquals(7, CommonAlgorithms.modularMultiplicativeInverse(-3, 11));
+    }
+
+    @Test
+    void testModularInverse_One() {
+        // The inverse of 1 is always 1.
+        assertEquals(1, CommonAlgorithms.modularMultiplicativeInverse(1, 26));
+    }
+
+    @Test
+    void testModularInverse_ThrowsExceptionWhenNotRelativelyPrime() {
+        // gcd(4, 10) = 2, so no inverse exists.
+        ArithmeticException exception = assertThrows(
+            ArithmeticException.class,
+            () -> CommonAlgorithms.modularMultiplicativeInverse(4, 10)
+        );
+        assertEquals("Modular inverse does not exist because numbers are not relatively prime.", exception.getMessage());
+    }
+
+    @Test
+    void testModularInverse_ThrowsExceptionForInvalidMod() {
+        // Modulus must be > 1.
+        assertThrows(ArithmeticException.class, () -> CommonAlgorithms.modularMultiplicativeInverse(5, 1));
+        assertThrows(ArithmeticException.class, () -> CommonAlgorithms.modularMultiplicativeInverse(5, 0));
+        assertThrows(ArithmeticException.class, () -> CommonAlgorithms.modularMultiplicativeInverse(5, -10));
+    }
 }
